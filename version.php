@@ -11,7 +11,7 @@ return [
         'create_system_config_table.php',
         '添加sys_config 默认值'
     ],
-    '2.4' => [
+    '2.5' => [
         '修复json无法保存的BUG',
         '添加arr.key方式获取json值'
     ]
