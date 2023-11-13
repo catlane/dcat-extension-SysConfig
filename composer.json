@@ -1,0 +1,39 @@
+{
+    "name": "catlane/dcat-sys-config",
+    "alias": "",
+    "description": "后台配置项，将一些配置项变为后台管理员可操作",
+    "type": "library",
+    "keywords": [
+        "dcat-admin",
+        "extension"
+    ],
+    "homepage": "https://github.com/catlane/SysConfig",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Catlane",
+            "email": "catlane@foxmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0.2",
+        "dcat/laravel-admin": "~2.0",
+        "guzzlehttp/guzzle": "^7.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Catlane\\SysConfig\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    },
+    "extra": {
+        "dcat-admin": "Catlane\\SysConfig\\SysConfigServiceProvider",
+        "laravel": {
+            "providers": [
+                "Catlane\\SysConfig\\SysConfigServiceProvider"
+            ]
+        }
+    }
+}
