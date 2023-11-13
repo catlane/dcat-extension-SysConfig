@@ -7,8 +7,12 @@ if (!function_exists('sys_config')) {
     {
         $keyName = '';
         if (strpos($configKey, '.') !== FALSE) {
-            $keyName = substr($configKey, strpos($configKey,'.') + 1);
-            $configKey = substr($configKey, 0, strpos($configKey,'.'));
+            $configArr = explode('.', $configKey);
+            $configKey = $configArr [0];
+            unset($configArr[0]);
+
+            $keyName = array_values($configArr);
+            unset($configArr);
         }
 
         $cacheData = Redis::hget('system_config', $configKey);
@@ -47,9 +51,19 @@ if (!function_exists('sys_config')) {
         $newValue = json_decode($cacheData, TRUE);
         if (is_array($newValue)) {
             if ($keyName) {
-                return $newValue[$keyName] ?? $defaultRes;
+                foreach ($keyName as $keyNameKey => $keyNameItem) {
+                    if (isset($newValue[$keyNameItem])) {
+                        $newValue = $newValue[$keyNameItem];
+                        if ($keyNameKey == count($keyName) - 1) {
+                            return $newValue;
+                        }
+                        continue;
+                    }
+                    return $defaultRes;
+                }
+                return $defaultRes;
             }
-            return $newValue ?? $defaultRes;
+            return $newValue;
         }
 
         return $cacheData ?? $defaultRes;

@@ -3,7 +3,7 @@
 ```php
 #获取配置项
 sys_config('config', '');
-sys_config('arr.name', '无名');
+sys_config('arr.key.price', '100');
 如果未找到,且未设置默认值,则返回null
 支持JSON数组用.的方式来获取数组的键值
 ```
