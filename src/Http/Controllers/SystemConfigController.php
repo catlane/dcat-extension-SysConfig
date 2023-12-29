@@ -131,7 +131,8 @@ class SystemConfigController extends AdminController
                 6 => 'json',
                 7 => '双范围选择',
                 8 => '密码',
-                9 => '开关'
+                9 => '开关',
+                10 => '下拉框'
             ])->required()->when(6, function (Form $form) {
                 $form->divider();
                 $form->table('extra','json键值', function (Form\NestedForm $table) {
@@ -147,7 +148,15 @@ class SystemConfigController extends AdminController
 
                 $form->range("range_extra.start", "range_extra.end", '范围值');
                 $form->text('range_extra.desc', '范围名称');
-            });
+            })->when(10, function (Form $form) {
+                $form->divider();
+
+
+                $form->table('extra','下拉框选项', function (Form\NestedForm $table) {
+                    $table->text('key', '键值(key)');
+                    $table->text('label', '标签(value)');
+                });
+            });;
 
 
             $form->saving(function (Form $form) {
@@ -188,8 +197,13 @@ class SystemConfigController extends AdminController
                         return $form->response()->error('范围值开始数字不能大于结束数字');
                     }
                 }
+                if ($form->type == 10) {
+                    if (!$form->extra) {
+                        return $form->response()->error('下拉框选项不能为空');
+                    }
+                }
 
-                if ($form->type != 6) {
+                if (!in_array($form->type, [6,10])) {
                     $form->deleteInput('extra');
                 }
                 if ($form->type != 7) {

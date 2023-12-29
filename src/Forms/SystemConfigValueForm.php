@@ -178,6 +178,14 @@ class SystemConfigValueForm extends Form
                 case 9:
                     $input = $this->switch($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
                     break;
+                case 10:
+                    $options = [];
+                    foreach ($value['extra'] as $v) {
+                        $options[$v['key']] = $v['label'];
+                    }
+
+                    $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                    break;
 
             }
             if ($value['required'] && $input) {
