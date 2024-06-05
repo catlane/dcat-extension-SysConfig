@@ -5,6 +5,7 @@ namespace Catlane\SysConfig\Http\Controllers;
 use Catlane\SysConfig\Forms\SettingForm;
 use Catlane\SysConfig\Forms\SystemConfigValueForm;
 use Catlane\SysConfig\Models\SystemConfigClassifyModel;
+use Catlane\SysConfig\Models\SystemConfigModel;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Tab;
@@ -21,18 +22,20 @@ class SystemConfigValueController extends AdminController
         $request = request();
 
 
-        $classifyList = SystemConfigClassifyModel::orderBy('scene', 'asc')->orderBy('sort', 'asc')
-            ->select(['id','classify_name', 'scene'])
+        $classifyList = SystemConfigModel::where('config_type', 1)
+            ->where('parent_id', 0)
+            ->orderBy('sort', 'asc')
+            ->select(['id','config_name'])
             ->get()
             ->keyBy('id')->toArray();
+
+
         foreach ($classifyList as $k => $value) {
-            $classifyList[$k] = $value['classify_name'];
-            if ($value['scene'] == 0) {
-                $classifyList[$k] .= '-后台';
-            }else{
-                $classifyList[$k] .='-前台';
-            }
+            $classifyList[$k] = $value['config_name'];
         }
+
+
+
 
 
 

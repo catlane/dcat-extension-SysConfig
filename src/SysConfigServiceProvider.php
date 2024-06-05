@@ -23,11 +23,6 @@ class SysConfigServiceProvider extends ServiceProvider
         ],
         [
             'parent' => '系统配置项', // 指定父级菜单
-            'title'  => '分类配置',
-            'uri'    => 'sys/sys-config-classify',
-        ],
-        [
-            'parent' => '系统配置项', // 指定父级菜单
             'title'  => '配置设置',
             'uri'    => 'sys/sys-config',
         ],

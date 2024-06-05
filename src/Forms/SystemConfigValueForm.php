@@ -43,12 +43,6 @@ class SystemConfigValueForm extends Form
                     unset($data[$k]);
                     continue;
                 }
-//                if (is_array($v)) {
-//                    foreach ($v as $key => $value) {
-//                        $data["{$k}.{$key}"] = $value;
-//                    }
-//                    unset($data[$k]);
-//                }
             }
             foreach ($data as $k => $v) {
 
@@ -114,88 +108,117 @@ class SystemConfigValueForm extends Form
      */
     public function form()
     {
-        $config = SystemConfigModel::leftJoin('system_config_value', 'system_config.config_key', '=', 'system_config_value.config_key')
-            ->where('config_classify_id', $this->activeId)
-            ->select([
-                'system_config.*',
-                'system_config_value.value'
+
+        $configGroup = SystemConfigModel::where('parent_id', $this->activeId)
+            ->orderBy('sort', 'asc')
+            ->with([
+                'configValue',
+                'children' => function ($query) {
+                    $query->with(['configValue']);
+                }
             ])
             ->get()
             ->toArray();
 
 
-        foreach ($config as $value) {
-            $input = null;
-            switch ($value['type']) {
-                case 1:
-                    $input = $this->text($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 2:
-                    $input = $this->number($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 3:
-                    $input = $this->textarea($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 4:
-                    $input = $this->editor($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 5:
-                    $input = $this->image($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 6:
-                    $defaultValue = json_decode($value['value'], TRUE);
-                    $this->table($value['config_key'],$value['config_name'], function (\Dcat\Admin\Form\NestedForm $table) use ($value) {
-                        foreach ($value['extra'] as $item) {
-                            if ($item['required']) {
-                                $text = $table->text($item['key'], $item['label'] ??'')->required($item['required']);
-                            }else{
-                                $text = $table->text($item['key'], $item['label'] ??'');
-                            }
-                            if (!empty($item['help'])) {
-                                $text->help($item['help'] ?? '');
-                            }
-                        }
-                    })->default($defaultValue);
-                    break;
-                case 7:
+        foreach ($configGroup as $item) {
+            if ($item['config_type'] == 0) {
+                $input = $this->renderInput($item);
+                continue;
+            }
+            $this->fieldset($item['config_name'], function (Form $form) use ($item) {
 
-                    $rangValue = is_null($value['value']) ? [] : explode(';', $value['value']);
-
-                    $this->slider($value['config_key'], $value['config_name'])->options([
-                        'max'     => intval($value['range_extra']['end'] ?? 0),
-                        'min'     => intval($value['range_extra']['start'] ?? 0),
-                        'step'    => 1,
-                        'postfix' => $value['range_extra']['desc'] ?? '%',
-                        'type' => 'double',
-                        'drag_interval' => TRUE,
-                        'from' => intval(isset($rangValue[0]) ? $rangValue[0] : intval($value['range_extra']['start'] ?? 0)),
-                        'to' => intval(isset($rangValue[1]) ? $rangValue[1] : intval($value['range_extra']['end'] ?? 0))
-                    ])->render();
-                    break;
-                case 8:
-                    $input = $this->password($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 9:
-                    $input = $this->switch($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
-                    break;
-                case 10:
-                    $options = [];
-                    foreach ($value['extra'] as $v) {
-                        $options[$v['key']] = $v['label'];
+                foreach ($item['children'] as $child) {
+                    if ($child['config_type'] == 1) {
+                        continue;
                     }
+                    $this->renderInput($child);
+                }
 
-                    $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
-                    break;
-
-            }
-            if ($value['required'] && $input) {
-                $input->required();
-            }
-            if ($input && $value['help']) {
-                $input->help($value['help']);
-            }
+            });
         }
 
+
+
+
+
         $this->disableResetButton();
+    }
+
+
+
+    protected function renderInput($value)
+    {
+        $input = null;
+        $value['value'] = $value['config_value']['value'] ?? NULL;
+        switch ($value['type']) {
+            case 1:
+                $input = $this->text($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 2:
+                $input = $this->number($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 3:
+                $input = $this->textarea($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 4:
+                $input = $this->editor($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 5:
+                $input = $this->image($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 6:
+                $defaultValue = json_decode($value['value'], TRUE);
+                $this->table($value['config_key'],$value['config_name'], function (\Dcat\Admin\Form\NestedForm $table) use ($value) {
+                    foreach ($value['extra'] as $item) {
+                        if ($item['required']) {
+                            $text = $table->text($item['key'], $item['label'] ??'')->required($item['required']);
+                        }else{
+                            $text = $table->text($item['key'], $item['label'] ??'');
+                        }
+                        if (!empty($item['help'])) {
+                            $text->help($item['help'] ?? '');
+                        }
+                    }
+                })->default($defaultValue);
+                break;
+            case 7:
+
+                $rangValue = is_null($value['value']) ? [] : explode(';', $value['value']);
+
+                $this->slider($value['config_key'], $value['config_name'])->options([
+                    'max'     => intval($value['range_extra']['end'] ?? 0),
+                    'min'     => intval($value['range_extra']['start'] ?? 0),
+                    'step'    => 1,
+                    'postfix' => $value['range_extra']['desc'] ?? '%',
+                    'type' => 'double',
+                    'drag_interval' => TRUE,
+                    'from' => intval(isset($rangValue[0]) ? $rangValue[0] : intval($value['range_extra']['start'] ?? 0)),
+                    'to' => intval(isset($rangValue[1]) ? $rangValue[1] : intval($value['range_extra']['end'] ?? 0))
+                ])->render();
+                break;
+            case 8:
+                $input = $this->password($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 9:
+                $input = $this->switch($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
+                break;
+            case 10:
+                $options = [];
+                foreach ($value['extra'] as $v) {
+                    $options[$v['key']] = $v['label'];
+                }
+
+                $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                break;
+
+        }
+        if ($value['required'] && $input) {
+            $input->required();
+        }
+        if ($input && $value['help']) {
+            $input->help($value['help']);
+        }
+        return $input;
     }
 }
