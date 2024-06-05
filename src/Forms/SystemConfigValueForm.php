@@ -85,6 +85,8 @@ class SystemConfigValueForm extends Form
                         }
                     }
                     $configValueModel->value = $v;
+                }elseif (in_array($keys->type, [12])){
+                    $configValueModel->value = $v;
                 }else{
                     $configValueModel->value = trim($v) ?? '';
                 }
@@ -187,14 +189,14 @@ class SystemConfigValueForm extends Form
                 $rangValue = is_null($value['value']) ? [] : explode(';', $value['value']);
 
                 $this->slider($value['config_key'], $value['config_name'])->options([
-                    'max'     => intval($value['range_extra']['end'] ?? 0),
-                    'min'     => intval($value['range_extra']['start'] ?? 0),
+                    'max'     => intval($value['extra']['end'] ?? 0),
+                    'min'     => intval($value['extra']['start'] ?? 0),
                     'step'    => 1,
-                    'postfix' => $value['range_extra']['desc'] ?? '%',
+                    'postfix' => $value['extra']['desc'] ?? '%',
                     'type' => 'double',
                     'drag_interval' => TRUE,
-                    'from' => intval(isset($rangValue[0]) ? $rangValue[0] : intval($value['range_extra']['start'] ?? 0)),
-                    'to' => intval(isset($rangValue[1]) ? $rangValue[1] : intval($value['range_extra']['end'] ?? 0))
+                    'from' => intval(isset($rangValue[0]) ? $rangValue[0] : intval($value['extra']['start'] ?? 0)),
+                    'to' => intval(isset($rangValue[1]) ? $rangValue[1] : intval($value['extra']['end'] ?? 0))
                 ])->render();
                 break;
             case 8:
@@ -210,6 +212,24 @@ class SystemConfigValueForm extends Form
                 }
 
                 $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                break;
+
+            case 11:
+                $options = [];
+                foreach ($value['extra'] as $v) {
+                    $options[$v['key']] = $v['label'];
+                }
+
+                $input = $this->radio($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                break;
+
+            case 12:
+                $options = [];
+                foreach ($value['extra'] as $v) {
+                    $options[$v['key']] = $v['label'];
+                }
+
+                $input = $this->checkbox($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
                 break;
 
         }
