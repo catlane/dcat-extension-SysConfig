@@ -236,9 +236,14 @@ class SystemConfigValueForm extends Form
         if ($value['required'] && $input) {
             $input->required();
         }
-        if ($input && $value['help']) {
-            $input->help($value['help']);
+        if ($value['help']) {
+            if ($input) {
+                $input->help($value['help']);
+            }else{
+                $this->html("<div style='color: #737373'><i class=\"fa feather icon-help-circle\"></i>{$value['help']}</div>");
+            }
         }
+
         return $input;
     }
 }
