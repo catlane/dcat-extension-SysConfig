@@ -7,7 +7,7 @@
         "dcat-admin",
         "extension"
     ],
-    "homepage": "https://github.com/catlane/SysConfig",
+    "homepage": "https://github.com/catlane/dcat-extension-SysConfig",
     "license": "MIT",
     "authors": [
         {
