@@ -24,5 +24,8 @@ return [
     ],
     '3.1' => [
         '去掉图片和http的composer包'
+    ],
+     '3.2' => [
+        '修改homepage'
     ]
 ];
