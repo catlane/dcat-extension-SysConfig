@@ -17,8 +17,7 @@
     ],
     "require": {
         "php": "^8.0.2",
-        "dcat/laravel-admin": "~2.0",
-        "guzzlehttp/guzzle": "^7.7"
+        "dcat/laravel-admin": "~2.0"
     },
     "autoload": {
         "psr-4": {

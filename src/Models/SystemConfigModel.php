@@ -25,7 +25,6 @@ class SystemConfigModel extends Model
 
     // 标题字段名称，默认值为 title
     protected $titleColumn = 'config_name';
-//    protected $guarded = [];
 
     public function configValue()
     {

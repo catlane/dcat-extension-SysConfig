@@ -62,19 +62,20 @@ class SystemConfigValueForm extends Form
                     $configValueModel->config_key = $k;
                 }
                 if ($keys->type == 5) {
-                    if ($request->file($k) === null) {
-                        $configValueModel->value = $v;
-                    }else{
-                        $content = $request->file($k)->getContent();
-                        $type = $request->file($k)->getMimeType();
-                        $type = explode('/', $type);
-                        $type = $type[1] ?? 'png';
-                        $ossClient = new OssClient('', '', '', false);
-                        $bucket = 'ussms';
-                        $fileName = md5(time()) .'.'. $type;
-                        $result = $ossClient->putObject($bucket, 'images/' . $fileName, $content);
-                        $configValueModel->value = 'images/'.$fileName;
-                    }
+                    //暂时放弃图片上传
+//                    if ($request->file($k) === null) {
+//                        $configValueModel->value = $v;
+//                    }else{
+//                        $content = $request->file($k)->getContent();
+//                        $type = $request->file($k)->getMimeType();
+//                        $type = explode('/', $type);
+//                        $type = $type[1] ?? 'png';
+//                        $ossClient = new OssClient('', '', '', false);
+//                        $bucket = 'ussms';
+//                        $fileName = md5(time()) .'.'. $type;
+//                        $result = $ossClient->putObject($bucket, 'images/' . $fileName, $content);
+//                        $configValueModel->value = 'images/'.$fileName;
+//                    }
 
                 }elseif ($keys->type == 6) {
                     foreach ($v as $kk => $vv) {

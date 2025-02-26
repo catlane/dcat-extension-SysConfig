@@ -2,7 +2,6 @@
 
 namespace Catlane\SysConfig\Http\Controllers;
 
-use Catlane\SysConfig\Models\SystemConfigClassifyModel;
 use Catlane\SysConfig\Models\SystemConfigModel;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -103,7 +102,7 @@ class SystemConfigController extends AdminController
                     2 => '数字框',
                     3 => '文本域',
                     4 => '富文本',
-                    5 => '图片上传',
+//                    5 => '图片上传',
                     6 => 'json',
                     7 => '双范围选择',
                     8 => '密码',

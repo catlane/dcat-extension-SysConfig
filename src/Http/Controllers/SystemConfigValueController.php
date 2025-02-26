@@ -4,7 +4,6 @@ namespace Catlane\SysConfig\Http\Controllers;
 
 use Catlane\SysConfig\Forms\SettingForm;
 use Catlane\SysConfig\Forms\SystemConfigValueForm;
-use Catlane\SysConfig\Models\SystemConfigClassifyModel;
 use Catlane\SysConfig\Models\SystemConfigModel;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
