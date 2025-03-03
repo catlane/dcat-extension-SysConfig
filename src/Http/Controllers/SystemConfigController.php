@@ -64,7 +64,7 @@ class SystemConfigController extends AdminController
         return Form::make(new SystemConfigModel(), function (Form $form) {
 
             if ($form->isEditing()) {
-                if (in_array($form->model()->type, [6,7,10,11,12])){
+                if (in_array($form->model()->type, [6,7,10,11,12,13])){
                     $extraName = "extra{$form->model()->type}";
                     $form->model()->$extraName = $form->model()->extra;
                     $form->model()->extra = '';
