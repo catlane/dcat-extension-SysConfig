@@ -305,7 +305,7 @@ class SystemConfigController extends AdminController
 
 
 
-            if (in_array($model->type, [6,7,10,11,12])){
+            if (in_array($model->type, [6,7,10,11,12,13])){
                 $extraData = $request->post("extra{$model->type}");
                 foreach ($extraData as $k=> $datum) {
                     if (isset($datum['_remove_']) && $datum['_remove_'] == 1) {
@@ -339,6 +339,24 @@ class SystemConfigController extends AdminController
                 }
                 if ($primaryKeyTotal == 0) {
                     return $this->form()->response()->error('Json键值主键必须选择一个');
+                }
+
+            }
+
+            if ($model->type == 13) {
+                if (!$request->extra) {
+                    return $this->form()->response()->error('Json键值不能为空');
+                }
+                foreach ($request->extra as $item) {
+                    if (!$item['key']) {
+                        return $this->form()->response()->error('Json键值中“键值项”不可为空');
+                    }
+                    if (!$item['label']) {
+                        return $this->form()->response()->error('Json键值中“标签项”不可为空');
+                    }
+                    if (!$item['type']) {
+                        return $this->form()->response()->error('Json键值中“类型项”不可为空');
+                    }
                 }
 
             }
