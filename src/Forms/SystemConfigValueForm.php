@@ -86,7 +86,7 @@ class SystemConfigValueForm extends Form
                         }
                     }
                     $configValueModel->value = $v;
-                }elseif (in_array($keys->type, [12])){
+                }elseif (in_array($keys->type, [12,13])){
                     $configValueModel->value = $v;
                 }else{
                     $configValueModel->value = trim($v) ?? '';
@@ -232,6 +232,25 @@ class SystemConfigValueForm extends Form
 
                 $input = $this->checkbox($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
                 break;
+            case 13:
+
+                $defaultValue = json_decode($value['value'], TRUE);
+                $this->embeds($value['config_key'],$value['config_name'], function ($form) use ($value,$defaultValue) {
+                    foreach ($value['extra'] as $item) {
+                        $input = $form->{$item['type']}($item['key'], $item['label'] ??'');
+                        if($item['required']){
+                            $input =  $input->required();
+                        }
+                        if($item['help']){
+                            $input = $input->help($item['help']);
+                        }
+                        if (isset($defaultValue[$item['key']])) {
+                            $input->default($defaultValue[$item['key']]);
+                        }
+                    }
+                });
+                break;
+
 
         }
         if ($value['required'] && $input) {

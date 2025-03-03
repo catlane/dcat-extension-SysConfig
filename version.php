@@ -27,5 +27,8 @@ return [
     ],
      '3.2' => [
         '修改homepage'
+    ],
+    '3.3' => [
+        '添加JSON对象功能,用config.json获取'
     ]
 ];

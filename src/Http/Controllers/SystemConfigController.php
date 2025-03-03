@@ -103,7 +103,8 @@ class SystemConfigController extends AdminController
                     3 => '文本域',
                     4 => '富文本',
 //                    5 => '图片上传',
-                    6 => 'json',
+                    13 => 'json固定值对象',
+                    6 => 'json数组',
                     7 => '双范围选择',
                     8 => '密码',
                     9 => '开关',
@@ -154,6 +155,23 @@ class SystemConfigController extends AdminController
                             $table->text('key', '键值(key)');
                             $table->text('label', '标签(value)');
                         });
+                    })
+                    ->when(13, function (Form $form) {
+                        $form->divider();
+                        $form->table('extra13','json键值', function (Form\NestedForm $table) {
+                            $table->text('key', '键值');
+                            $table->text('label', '标签');
+                            $table->text('help', '提示信息');
+                            $table->switch('required', '必填');
+                            $table->select('type', '类型')->options([
+                                'text' => '文本框',
+                                'number' => '数字框',
+                                'url' => '网址',
+                                'textarea' => '文本域',
+                                'password' => '密码',
+                                'switch' => '开关',
+                            ]);
+                        });
                     });
             })
                 ->when(1, function (Form $form) {
@@ -183,7 +201,7 @@ class SystemConfigController extends AdminController
                     if (strpos($form->config_key, '.')) {
                         return $form->response()->error('Config Key 不能包含英文.');
                     }
-                    if (in_array($form->type, [6,7,10,11,12])){
+                    if (in_array($form->type, [6,7,10,11,12,13])){
                         $form->input('extra', $form->input("extra{$form->type}"));
                     }
 
@@ -211,6 +229,24 @@ class SystemConfigController extends AdminController
                         }
                     }
 
+                    if ($form->type == 13) {
+                        if (!$form->extra) {
+                            return $form->response()->error('Json键值不能为空');
+                        }
+                        foreach ($form->extra as $item) {
+                            if (!$item['key']) {
+                                return $form->response()->error('Json键值中“键值项”不可为空');
+                            }
+                            if (!$item['label']) {
+                                return $form->response()->error('Json键值中“标签项”不可为空');
+                            }
+                            if (!$item['type']) {
+                                return $form->response()->error('Json键值中“类型项”不可为空');
+                            }
+                        }
+
+                    }
+
                     if ($form->type == 7) {
                         if (is_null($form->input('extra.start')) || is_null($form->input('extra.end'))) {
                             return $form->response()->error('范围值必填');
@@ -231,6 +267,7 @@ class SystemConfigController extends AdminController
                 $form->deleteInput('extra10');
                 $form->deleteInput('extra11');
                 $form->deleteInput('extra12');
+                $form->deleteInput('extra13');
 
             });
 
