@@ -1,8 +1,8 @@
 <?php
 
-namespace Catlane\SysConfig\Models;
+namespace Catlane\DcatSysConfig\Models;
 
-use Catlane\SysConfig\Casts\SystemConfigValueJson;
+use Catlane\DcatSysConfig\Casts\SystemConfigValueJson;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Model;
 

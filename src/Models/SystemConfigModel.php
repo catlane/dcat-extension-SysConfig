@@ -1,6 +1,6 @@
 <?php
 
-namespace Catlane\SysConfig\Models;
+namespace Catlane\DcatSysConfig\Models;
 
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Dcat\Admin\Traits\ModelTree;

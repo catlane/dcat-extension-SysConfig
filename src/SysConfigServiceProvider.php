@@ -1,18 +1,18 @@
 <?php
 
-namespace Catlane\SysConfig;
+namespace Catlane\DcatSysConfig;
 
 use Dcat\Admin\Extend\ServiceProvider;
 use Dcat\Admin\Admin;
 
 class SysConfigServiceProvider extends ServiceProvider
 {
-	protected $js = [
+    protected $js = [
         'js/index.js',
     ];
-	protected $css = [
-		'css/index.css',
-	];
+    protected $css = [
+        'css/index.css',
+    ];
 
 
     protected $menu = [
@@ -33,21 +33,21 @@ class SysConfigServiceProvider extends ServiceProvider
         ],
 
     ];
-	public function register()
-	{
-		//
-	}
+    public function register()
+    {
+        //
+    }
 
-	public function init()
-	{
-		parent::init();
+    public function init()
+    {
+        parent::init();
 
-		//
+        //
 
-	}
+    }
 
-	public function settingForm()
-	{
-		return new Setting($this);
-	}
+    public function settingForm()
+    {
+        return new Setting($this);
+    }
 }

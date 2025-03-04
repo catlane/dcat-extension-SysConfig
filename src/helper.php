@@ -1,6 +1,6 @@
 <?php
 
-use Catlane\SysConfig\Models\SystemConfigValueModel;
+use Catlane\DcatSysConfig\Models\SystemConfigValueModel;
 use \Illuminate\Support\Facades\Redis;
 if (!function_exists('sys_config')) {
     function sys_config($configKey, $defaultRes = NULL)

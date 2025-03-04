@@ -21,17 +21,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Catlane\\SysConfig\\": "src/"
+            "Catlane\\DcatSysConfig\\": "src/"
         },
         "files": [
             "src/helper.php"
         ]
     },
     "extra": {
-        "dcat-admin": "Catlane\\SysConfig\\SysConfigServiceProvider",
+        "dcat-admin": "Catlane\\DcatSysConfig\\SysConfigServiceProvider",
         "laravel": {
             "providers": [
-                "Catlane\\SysConfig\\SysConfigServiceProvider"
+                "Catlane\\DcatSysConfig\\SysConfigServiceProvider"
             ]
         }
     }

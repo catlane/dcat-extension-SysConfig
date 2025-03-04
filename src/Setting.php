@@ -1,6 +1,6 @@
 <?php
 
-namespace Catlane\SysConfig;
+namespace Catlane\DcatSysConfig;
 
 use Dcat\Admin\Extend\Setting as Form;
 

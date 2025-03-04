@@ -1,8 +1,8 @@
 <?php
 
-namespace Catlane\SysConfig\Http\Controllers;
+namespace Catlane\DcatSysConfig\Http\Controllers;
 
-use Catlane\SysConfig\Models\SystemConfigModel;
+use Catlane\DcatSysConfig\Models\SystemConfigModel;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;

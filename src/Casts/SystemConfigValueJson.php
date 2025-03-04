@@ -1,6 +1,6 @@
 <?php
 
-namespace Catlane\SysConfig\Casts;
+namespace Catlane\DcatSysConfig\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;

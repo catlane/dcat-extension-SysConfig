@@ -1,9 +1,9 @@
 <?php
 
-namespace Catlane\SysConfig\Forms;
+namespace Catlane\DcatSysConfig\Forms;
 
-use Catlane\SysConfig\Models\SystemConfigModel;
-use Catlane\SysConfig\Models\SystemConfigValueModel;
+use Catlane\DcatSysConfig\Models\SystemConfigModel;
+use Catlane\DcatSysConfig\Models\SystemConfigValueModel;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Widgets\Form;
 use Illuminate\Support\Facades\DB;
