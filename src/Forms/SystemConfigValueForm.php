@@ -46,6 +46,7 @@ class SystemConfigValueForm extends Form
             }
             foreach ($data as $k => $v) {
 
+
                 $keys = SystemConfigModel::where('config_key', $k)->first();
                 if (!$keys) {
                     continue;
@@ -63,21 +64,22 @@ class SystemConfigValueForm extends Form
                 }
                 if ($keys->type == 5) {
                     //暂时放弃图片上传
-//                    if ($request->file($k) === null) {
-//                        $configValueModel->value = $v;
-//                    }else{
-//                        $content = $request->file($k)->getContent();
-//                        $type = $request->file($k)->getMimeType();
-//                        $type = explode('/', $type);
-//                        $type = $type[1] ?? 'png';
-//                        $ossClient = new OssClient('', '', '', false);
-//                        $bucket = 'ussms';
-//                        $fileName = md5(time()) .'.'. $type;
-//                        $result = $ossClient->putObject($bucket, 'images/' . $fileName, $content);
-//                        $configValueModel->value = 'images/'.$fileName;
-//                    }
+                    //                    if ($request->file($k) === null) {
+                    //                        $configValueModel->value = $v;
+                    //                    }else{
+                    //                        $content = $request->file($k)->getContent();
+                    //                        $type = $request->file($k)->getMimeType();
+                    //                        $type = explode('/', $type);
+                    //                        $type = $type[1] ?? 'png';
+                    //                        $ossClient = new OssClient('', '', '', false);
+                    //                        $bucket = 'ussms';
+                    //                        $fileName = md5(time()) .'.'. $type;
+                    //                        $result = $ossClient->putObject($bucket, 'images/' . $fileName, $content);
+                    //                        $configValueModel->value = 'images/'.$fileName;
+                    //                    }
 
                 }elseif ($keys->type == 6) {
+
                     foreach ($v as $kk => $vv) {
                         if (isset($v[$kk]['_remove_']) ) unset($v[$kk]['_remove_']);
                         if ($vv['_remove_']) {
@@ -85,8 +87,21 @@ class SystemConfigValueForm extends Form
                             continue;
                         }
                     }
-                    $configValueModel->value = $v;
-                }elseif (in_array($keys->type, [12,13])){
+
+                    $v = array_values($v);
+                    $newV = [];
+                    //重新排序
+                    for ($i = 1;$i<=count($v);$i++){
+                        $newV["new_{$i}"] = $v[$i - 1];
+                    }
+                    $configValueModel->value = $newV;
+
+                }elseif (in_array($keys->type, [10,12,13,14])){
+                    foreach ($v as $kkk => $vvv){
+                        if ($vvv === null) {
+                            unset($v[$kkk]);
+                        }
+                    }
                     $configValueModel->value = $v;
                 }else{
                     $configValueModel->value = trim($v) ?? '';
@@ -111,17 +126,16 @@ class SystemConfigValueForm extends Form
      */
     public function form()
     {
-
         $configGroup = SystemConfigModel::where('parent_id', $this->activeId)
-            ->orderBy('sort', 'asc')
-            ->with([
-                'configValue',
-                'children' => function ($query) {
-                    $query->with(['configValue']);
-                }
-            ])
-            ->get()
-            ->toArray();
+                                        ->orderBy('sort', 'asc')
+                                        ->with([
+                                            'configValue',
+                                            'children' => function ($query) {
+                                                $query->with(['configValue']);
+                                            }
+                                        ])
+                                        ->get()
+                                        ->toArray();
 
 
         foreach ($configGroup as $item) {
@@ -207,12 +221,17 @@ class SystemConfigValueForm extends Form
                 $input = $this->switch($value['config_key'], $value['config_name'])->default($value['value'] ?? '');
                 break;
             case 10:
+            case 14:
                 $options = [];
                 foreach ($value['extra'] as $v) {
                     $options[$v['key']] = $v['label'];
                 }
 
-                $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                if ($value['type'] == 10){
+                    $input = $this->select($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                }else{
+                    $input = $this->multipleSelect($value['config_key'], $value['config_name'])->default($value['value'] ?? '')->options($options)->default($value['value'] ?? '');
+                }
                 break;
 
             case 11:
@@ -253,7 +272,7 @@ class SystemConfigValueForm extends Form
 
 
         }
-        if ($value['required'] && $input) {
+        if ($value['required'] && $input && $value['type'] != 9) {
             $input->required();
         }
         if ($value['help']) {
