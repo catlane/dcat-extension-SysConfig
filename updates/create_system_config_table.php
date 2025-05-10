@@ -27,7 +27,7 @@ class CreateSystemConfigTable extends Migration
                 $table->integer('type')->default('0')->comment('1文本框,2数字框,3文本域,4富文本,5图片上传');
                 $table->integer('config_type')->default('0')->comment('0 配置1分类');
                 $table->string('help')->nullable()->comment('help内容');
-                $table->text('extra')->nullable(FALSE)->comment('json键值');
+                $table->text('extra')->nullable()->comment('json键值');
                 $table->string('range_extra')->nullable(FALSE)->default('[]')->comment('json键值');
                 $table->timestamps();
             });
