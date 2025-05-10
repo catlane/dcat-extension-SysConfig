@@ -16,8 +16,7 @@
         }
     ],
     "require": {
-        "php": "^8.0.2",
-        "dcat/laravel-admin": "~2.0"
+        "php": "^8.0.2"
     },
     "autoload": {
         "psr-4": {
